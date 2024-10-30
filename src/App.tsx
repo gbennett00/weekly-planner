@@ -1,5 +1,6 @@
 import "./App.css";
 import Commitment from "./components/Commitment";
+import ProgressCirce from "./components/ProgressCircle";
 
 function App() {
   return (
@@ -50,8 +51,10 @@ function App() {
             </div>
           </section>
         </div>
-        <div className="flex flex-col py-4 px-20">
-          <div className="w-28 h-28 bg-zinc-200 rounded-full"></div>
+        <div className="flex flex-col py-4 px-20 gap-3">
+          <ProgressCirce name="Individual" percent={0.94}/>
+          <ProgressCirce name="Disciple" percent={0.24}/>
+          <ProgressCirce name="Financial" percent={0.6}/>
         </div>
       </main>
       <footer className="bg-gray-600 text-white">
