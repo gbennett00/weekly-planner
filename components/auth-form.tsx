@@ -12,7 +12,7 @@ export default async function AuthForm(props: { isLogin: boolean, searchParams: 
   const description = props.isLogin ? "Sign in" : "Sign up";
 
   return (
-    <div className="flex-1 flex flex-col min-w-64">
+    <div className="flex flex-col min-w-64">
       <form >
         <h1 className="text-2xl font-medium">{description}</h1>
         <p className="text-sm text-foreground">
