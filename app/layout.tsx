@@ -51,6 +51,9 @@ export default async function RootLayout({
                     <Link href="/sign-out">
                       <Button>Sign Out</Button>
                     </Link>
+                    <Link href="/enable-mfa">
+                      <Button>Enable MFA</Button>
+                    </Link>
                   </div>
                 ) : (
                   <Link href="/sign-in">
