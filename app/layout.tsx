@@ -44,9 +44,14 @@ export default async function RootLayout({
               <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                 <h1 className="text-3xl font-bold text-gray-900">WeeklyPlanner</h1>
                 {user ? (
-                  <Link href="/dashboard">
-                    <Button>Go to Dashboard</Button>
-                  </Link>
+                  <div className="flex space-x-8">
+                    <Link href="/dashboard">
+                     <Button>Go to Dashboard</Button>
+                    </Link>
+                    <Link href="/sign-out">
+                      <Button>Sign Out</Button>
+                    </Link>
+                  </div>
                 ) : (
                   <Link href="/sign-in">
                     <Button>Sign In</Button>
