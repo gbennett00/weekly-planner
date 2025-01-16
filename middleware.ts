@@ -1,8 +1,33 @@
-import { type NextRequest } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
+import { createClient } from "./utils/supabase/server";
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  const response = await updateSession(request);
+
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // Check if the user is authenticated
+  if (!!user) {
+
+    const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    const { data: factors } = await supabase.auth.mfa.listFactors();
+
+    const hasMFA = factors != null && factors.totp.length > 0;
+    
+    // Check if the user needs MFA verification
+    if (hasMFA && data?.currentLevel != "aal2" && !request.nextUrl.pathname.startsWith("/mfa")) {
+      const url = new URL("/mfa-verification", request.url);
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Continue to the requested page if no issues
+  return response;
 }
 
 export const config = {
