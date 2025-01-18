@@ -13,14 +13,21 @@ export async function middleware(request: NextRequest) {
 
   // Check if the user is authenticated
   if (!!user) {
-
     const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
     const { data: factors } = await supabase.auth.mfa.listFactors();
 
     const hasMFA = factors != null && factors.totp.length > 0;
-    
-    // Check if the user needs MFA verification
-    if (hasMFA && data?.currentLevel != "aal2" && !request.nextUrl.pathname.startsWith("/mfa")) {
+
+    // Redirect users to MFA page if: 
+      // MFA is enabled but not verified
+      // User is not on the MFA page
+      // Request is not for signing out
+    if (
+      hasMFA &&
+      data?.currentLevel != "aal2" &&
+      !request.nextUrl.pathname.startsWith("/mfa") &&
+      !request.nextUrl.pathname.startsWith("/sign-out")
+    ) {
       const url = new URL("/mfa-verification", request.url);
       return NextResponse.redirect(url);
     }
