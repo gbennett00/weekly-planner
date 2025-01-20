@@ -4,6 +4,7 @@ import Link from "next/link";
 import "./globals.css";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/utils/supabase/server";
+import Profile from '@/components/profile';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -48,12 +49,7 @@ export default async function RootLayout({
                     <Link href="/dashboard">
                      <Button>Go to Dashboard</Button>
                     </Link>
-                    <Link href="/sign-out">
-                      <Button>Sign Out</Button>
-                    </Link>
-                    <Link href="/enable-mfa">
-                      <Button>Enable MFA</Button>
-                    </Link>
+                    <Profile />
                   </div>
                 ) : (
                   <Link href="/sign-in">
