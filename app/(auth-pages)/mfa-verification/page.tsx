@@ -1,19 +1,16 @@
 import { createClient } from "@/utils/supabase/server";
 import { redirect } from "next/navigation";
 import MFAVerification from "./mfa-verification";
+import useUser from "@/hooks/useUser";
 
 const MfaPage = async () => {
-  const supabase = await createClient();
-
-  // Check if the user is logged in
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await useUser();
 
   if (!user) {
     return redirect("/sign-in"); // Redirect unauthenticated users
   }
 
+  const supabase = await createClient();
   const { data: factors } = await supabase.auth.mfa.listFactors();
 
   // Redirect users without MFA enabled

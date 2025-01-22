@@ -3,8 +3,8 @@ import { ThemeProvider } from "next-themes";
 import Link from "next/link";
 import "./globals.css";
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
 import Profile from '@/components/profile';
+import useUser from '@/hooks/useUser';
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -26,10 +26,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await useUser();
 
   return (
     <html lang="en" className={geistSans.className} suppressHydrationWarning>
@@ -49,7 +46,7 @@ export default async function RootLayout({
                     <Link href="/dashboard">
                      <Button>Go to Dashboard</Button>
                     </Link>
-                    <Profile />
+                    <Profile user={user} />
                   </div>
                 ) : (
                   <Link href="/sign-in">

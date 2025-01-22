@@ -1,54 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
-import { createClient } from "@/utils/supabase/client";
 import * as Popover from "@radix-ui/react-popover";
 import * as Avatar from "@radix-ui/react-avatar"
+import { User } from "@/utils/types";
+import { redirect } from "next/navigation";
 
-type User = {
-  id: string;
-  email: string;
-  full_name?: string;
-  avatar_url?: string;
-  mfa_enabled: boolean;
-};
-
-export default function Profile() {
-  const [user, setUser] = useState<User | null>(null);
-  const supabase = createClient();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      const {
-        data: { user: supabaseUser },
-      } = await supabase.auth.getUser();
-      if (supabaseUser) {
-        const { id, email } = supabaseUser;
-        const full_name: string = supabaseUser.user_metadata?.full_name;
-        const avatar_url: string = supabaseUser.user_metadata?.avatar_url;
-        const mfa_enabled = !!supabaseUser.factors && supabaseUser.factors.length > 0;
-        setUser({
-          id,
-          email: email || "",
-          full_name: full_name || "",
-          avatar_url: avatar_url || "",
-          mfa_enabled,
-        });
-      }
-    };
-
-    fetchUser();
-  }, []);
-
+export default function Profile({ user } : { user: User }) {
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = "/sign-in"; // Redirect to sign-in page
+    redirect("/sign-out");
   };
-
-  if (!user) {
-    return <div>Loading...</div>;
-  }
 
   const { full_name, avatar_url, mfa_enabled } = user;
 
@@ -61,7 +22,7 @@ export default function Profile() {
             <Avatar.Fallback>
               {full_name 
                 ? full_name.charAt(0).toUpperCase()
-                : user.email.charAt(0).toUpperCase()
+                : "User"
               }
             </Avatar.Fallback>
           </Avatar.Root>

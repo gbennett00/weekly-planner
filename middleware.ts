@@ -1,18 +1,16 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
 import { createClient } from "./utils/supabase/server";
+import useUser from "./hooks/useUser";
 
 export async function middleware(request: NextRequest) {
   const response = await updateSession(request);
 
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const user = await useUser();
 
   // Check if the user is authenticated
   if (!!user) {
+    const supabase = await createClient();
     const { data } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
     const { data: factors } = await supabase.auth.mfa.listFactors();
 

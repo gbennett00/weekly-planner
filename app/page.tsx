@@ -1,12 +1,9 @@
 import { Button } from "@/components/ui/button";
-import { createClient } from "@/utils/supabase/server";
+import useUser from "@/hooks/useUser";
 import Link from "next/link";
 
 export default async function Home() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const { user } = await useUser();
 
   return (
     <>
